@@ -81,7 +81,7 @@ function ManageActivitiesPage({ activities, setActivities }) {
       <p className="section-label">Your activities</p>
       <ul className="manage-list">
         {activities.map((activity) => (
-          <li key={activity.id} className="manage-item">
+          <li key={activity.id} className={editingId === activity.id ? "manage-item-editing" : "manage-item"}>
             {editingId === activity.id ? (
               <>
                 <input type="text" value={editName} onChange={(e) => setEditName(e.target.value)} />

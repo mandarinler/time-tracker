@@ -17,8 +17,11 @@ function TrackerPage({ activities, timeEntries, setTimeEntries }) {
 
   timeEntries.forEach((entry) => {
     if (dayjs(entry.startTime).isBefore(startOfDay)) return;
-    const duration = entry.endTime ? entry.duration : Date.now() - entry.startTime;
-    todayTotals[entry.activityId] = (todayTotals[entry.activityId] || 0) + duration;
+    const duration = entry.endTime
+      ? entry.duration
+      : Date.now() - entry.startTime;
+    todayTotals[entry.activityId] =
+      (todayTotals[entry.activityId] || 0) + duration;
   });
 
   useEffect(() => {
@@ -35,7 +38,6 @@ function TrackerPage({ activities, timeEntries, setTimeEntries }) {
   useEffect(() => {
     localStorage.setItem("timeEntries", JSON.stringify(timeEntries));
   }, [timeEntries]);
-  
 
   function startEditingEntry(entry) {
     setEditingEntryId(entry.id);
@@ -46,13 +48,14 @@ function TrackerPage({ activities, timeEntries, setTimeEntries }) {
   }
 
   function saveEntryEdit(entryId) {
-    const start = dayjs(`${editDate}T${editStart}`).valueOf();
-    const end = dayjs(`${editDate}T${editEnd}`).valueOf();
-    if (end <= start) {
-      setEditError("End must be after start");
-      return;
+    const start = dayjs(`${editDate}T${editStart}`);
+    let end = dayjs(`${editDate}T${editEnd}`);
+
+    if (end.isSame(start) || end.isBefore(start)) {
+      end = end.add(1, "day");
     }
-    editEntry(entryId, { startTime: start, endTime: end });
+
+    editEntry(entryId, { startTime: start.valueOf(), endTime: end.valueOf() });
     setEditingEntryId(null);
   }
 
@@ -122,7 +125,8 @@ function TrackerPage({ activities, timeEntries, setTimeEntries }) {
             <div className="now-tracking-info">
               <span className="pulse-dot" />
               <span className="now-tracking-name">
-                {activities.find((a) => a.id === runningEntry.activityId)?.name ?? "Deleted activity"}
+                {activities.find((a) => a.id === runningEntry.activityId)
+                  ?.name ?? "Deleted activity"}
               </span>
             </div>
             <span className="now-tracking-time">
@@ -142,8 +146,12 @@ function TrackerPage({ activities, timeEntries, setTimeEntries }) {
         {activities.map((activity) => {
           const isRunning = runningEntry?.activityId === activity.id;
           const todayMs = todayTotals[activity.id] || 0;
-          const goalMs = activity.dailyGoalMinutes ? activity.dailyGoalMinutes * 60000 : null;
-          const progressPct = goalMs ? Math.min((todayMs / goalMs) * 100, 100) : null;
+          const goalMs = activity.dailyGoalMinutes
+            ? activity.dailyGoalMinutes * 60000
+            : null;
+          const progressPct = goalMs
+            ? Math.min((todayMs / goalMs) * 100, 100)
+            : null;
           const overGoal = goalMs && todayMs > goalMs;
 
           return (
@@ -164,12 +172,15 @@ function TrackerPage({ activities, timeEntries, setTimeEntries }) {
                       className="goal-bar-fill"
                       style={{
                         width: `${progressPct}%`,
-                        background: overGoal ? "var(--color-danger)" : "var(--activity-color)",
+                        background: overGoal
+                          ? "var(--color-danger)"
+                          : "var(--activity-color)",
                       }}
                     />
                   </div>
                   <span className="goal-label">
-                    {Math.round(todayMs / 60000)}m / {activity.dailyGoalMinutes}m
+                    {Math.round(todayMs / 60000)}m / {activity.dailyGoalMinutes}
+                    m
                   </span>
                 </>
               )}
@@ -190,16 +201,37 @@ function TrackerPage({ activities, timeEntries, setTimeEntries }) {
             .filter((e) => e.endTime !== null)
             .reverse()
             .map((entry) => {
-              const activity = activities.find((a) => a.id === entry.activityId);
+              const activity = activities.find(
+                (a) => a.id === entry.activityId,
+              );
 
               if (editingEntryId === entry.id) {
                 return (
-                  <li key={entry.id} className="history-item history-item-editing">
-                    <input type="date" value={editDate} onChange={(e) => setEditDate(e.target.value)} />
-                    <input type="time" value={editStart} onChange={(e) => setEditStart(e.target.value)} />
-                    <input type="time" value={editEnd} onChange={(e) => setEditEnd(e.target.value)} />
-                    <button onClick={() => saveEntryEdit(entry.id)}>Save</button>
-                    <button onClick={() => setEditingEntryId(null)}>Cancel</button>
+                  <li
+                    key={entry.id}
+                    className="history-item history-item-editing"
+                  >
+                    <input
+                      type="date"
+                      value={editDate}
+                      onChange={(e) => setEditDate(e.target.value)}
+                    />
+                    <input
+                      type="time"
+                      value={editStart}
+                      onChange={(e) => setEditStart(e.target.value)}
+                    />
+                    <input
+                      type="time"
+                      value={editEnd}
+                      onChange={(e) => setEditEnd(e.target.value)}
+                    />
+                    <button onClick={() => saveEntryEdit(entry.id)}>
+                      Save
+                    </button>
+                    <button onClick={() => setEditingEntryId(null)}>
+                      Cancel
+                    </button>
                     {editError && <p className="form-error">{editError}</p>}
                   </li>
                 );
@@ -218,7 +250,10 @@ function TrackerPage({ activities, timeEntries, setTimeEntries }) {
                     <span className="history-item-duration">
                       {formatDuration(entry.duration)}
                     </span>
-                    <button className="edit-button" onClick={() => startEditingEntry(entry)}>
+                    <button
+                      className="edit-button"
+                      onClick={() => startEditingEntry(entry)}
+                    >
                       Edit
                     </button>
                     <button
