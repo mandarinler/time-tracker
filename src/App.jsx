@@ -80,45 +80,79 @@ function App() {
 
   return (
     <div className="app">
-      <h1>Time Tracker</h1>
+      <header className="app-header">
+        <h1>Time Tracker</h1>
+        <span className="tagline">Track where your day goes</span>
+      </header>
 
-      <div className="activity-list">
+      <div className={`now-tracking ${!runningEntry ? "idle" : ""}`}>
+        {runningEntry ? (
+          <>
+            <div className="now-tracking-info">
+              <span className="pulse-dot" />
+              <span className="now-tracking-name">
+                {activities.find((a) => a.id === runningEntry.activityId)?.name}
+              </span>
+            </div>
+            <span className="now-tracking-time">
+              {formatDuration(Date.now() - runningEntry.startTime)}
+            </span>
+            <button className="stop-button" onClick={stopCurrent}>
+              Stop
+            </button>
+          </>
+        ) : (
+          "Nothing tracked yet — pick an activity below"
+        )}
+      </div>
+
+      <p className="section-label">Activities</p>
+      <div className="activity-grid">
         {activities.map((activity) => {
           const isRunning = runningEntry?.activityId === activity.id;
           return (
             <button
               key={activity.id}
+              className={`activity-card ${isRunning ? "is-active" : ""}`}
+              style={{ "--activity-color": activity.color }}
               onClick={() => startActivity(activity.id)}
-              style={{ backgroundColor: activity.color }}
-              className={isRunning ? "active" : ""}
             >
+              <span className="activity-dot" />
               {activity.name}
-              {isRunning && (
-                <span className="timer">
-                  {formatDuration(Date.now() - runningEntry.startTime)}
-                </span>
-              )}
             </button>
           );
         })}
       </div>
 
-      {runningEntry && <button onClick={stopCurrent}>Stop</button>}
-
-      <h2>History</h2>
-      <ul className="history">
-        {timeEntries
-          .filter((e) => e.endTime !== null)
-          .reverse()
-          .map((entry) => {
-            const activity = activities.find((a) => a.id === entry.activityId);
-            return (
-              <li key={entry.id}>
-                {activity.name} — {formatDuration(entry.duration)}
-              </li>
-            );
-          })}
-      </ul>
+      <p className="section-label">History</p>
+      {timeEntries.filter((e) => e.endTime !== null).length === 0 ? (
+        <p className="empty-state">No completed sessions yet</p>
+      ) : (
+        <ul className="history">
+          {timeEntries
+            .filter((e) => e.endTime !== null)
+            .reverse()
+            .map((entry) => {
+              const activity = activities.find(
+                (a) => a.id === entry.activityId,
+              );
+              return (
+                <li key={entry.id} className="history-item">
+                  <div className="history-item-info">
+                    <span
+                      className="activity-dot"
+                      style={{ "--activity-color": activity.color }}
+                    />
+                    {activity.name}
+                  </div>
+                  <span className="history-item-duration">
+                    {formatDuration(entry.duration)}
+                  </span>
+                </li>
+              );
+            })}
+        </ul>
+      )}
     </div>
   );
 }
