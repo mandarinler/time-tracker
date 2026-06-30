@@ -9,7 +9,7 @@ const PERIODS = [
   { key: "month", label: "Month" },
 ];
 
-export function StatsPage({ activities, timeEntries }) {
+function StatsPage({ activities, timeEntries }) {
   const [periodType, setPeriodType] = useState("day");
   const [offset, setOffset] = useState(0);
 
@@ -141,3 +141,5 @@ export function StatsPage({ activities, timeEntries }) {
     </>
   );
 }
+
+export default StatsPage;

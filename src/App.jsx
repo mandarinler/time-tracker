@@ -4,7 +4,7 @@ import Nav from "./components/Nav";
 import TrackerPage from "./pages/TrackerPage";
 import ManageActivitiesPage from "./pages/ManageActivitiesPage";
 import "./App.css";
-import { StatsPage } from "./pages/StatsPage";
+import StatsPage  from "./pages/StatsPage";
 
 function App() {
   const [activities, setActivities] = useState(() => {
@@ -21,7 +21,7 @@ function App() {
         return saved ? JSON.parse(saved) : [];
       });
   
-
+  
   return (
     <div className="app">
       <header className="app-header">
