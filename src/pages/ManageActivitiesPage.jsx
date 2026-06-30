@@ -1,12 +1,26 @@
 import { useState } from "react";
 import "./ManageActivitiesPage.css";
-function ManageActivitiesPage({ activities, addActivity, updateActivity, deleteActivity }) {
+function ManageActivitiesPage({ activities, setActivities }) {
   const [newName, setNewName] = useState("");
   const [newColor, setNewColor] = useState("#4f9cff");
   const [editingId, setEditingId] = useState(null);
   const [editName, setEditName] = useState("");
   const [editColor, setEditColor] = useState("#4f9cff");
+  function addActivity(name, color) {
+    setActivities((prev) => [...prev, { id: Date.now(), name, color }]);
+  }
 
+  function updateActivity(id, updates) {
+    setActivities((prev) =>
+      prev.map((activity) =>
+        activity.id === id ? { ...activity, ...updates } : activity,
+      ),
+    );
+  }
+
+  function deleteActivity(id) {
+    setActivities((prev) => prev.filter((activity) => activity.id !== id));
+  }
   function handleAdd(e) {
     e.preventDefault();
     if (!newName.trim()) return;

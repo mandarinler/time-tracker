@@ -67,6 +67,7 @@
 
 .stop-button:hover {
   background: rgba(255, 92, 92, 0.1);
+  border-color: #ccc
 }
 
 /* --- Activity grid --- */

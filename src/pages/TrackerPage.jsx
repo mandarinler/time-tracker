@@ -1,6 +1,58 @@
 import { formatDuration } from "../utils/formatDuration";
+import { useState, useEffect } from "react";
 import "./TrackerPage.css";
-function TrackerPage({ activities, timeEntries, runningEntry, startActivity, stopCurrent, deleteEntry }) {
+function TrackerPage({ activities, timeEntries,setTimeEntries }) {
+   const [, forceTick] = useState(0);
+  
+  const runningEntry = timeEntries.find((e) => e.endTime === null);
+   useEffect(() => {
+    const isRunning = timeEntries.some((e) => e.endTime === null);
+    if (!isRunning) return;
+    const interval = setInterval(() => forceTick((t) => t + 1), 1000);
+    return () => clearInterval(interval);
+  }, [timeEntries]);
+
+  useEffect(() => {
+    localStorage.setItem("activities", JSON.stringify(activities));
+  }, [activities]);
+
+  useEffect(() => {
+    localStorage.setItem("timeEntries", JSON.stringify(timeEntries));
+  }, [timeEntries]);
+
+  function startActivity(activityId) {
+    const now = Date.now();
+    setTimeEntries((prev) => {
+      const currentlyRunning = prev.find((entry) => entry.endTime === null);
+      if (currentlyRunning && currentlyRunning.activityId === activityId) {
+        return prev;
+      }
+      const closed = prev.map((entry) =>
+        entry.endTime === null
+          ? { ...entry, endTime: now, duration: now - entry.startTime }
+          : entry,
+      );
+      return [
+        ...closed,
+        { id: now, activityId, startTime: now, endTime: null, duration: null },
+      ];
+    });
+  }
+
+  function stopCurrent() {
+    const now = Date.now();
+    setTimeEntries((prev) =>
+      prev.map((entry) =>
+        entry.endTime === null
+          ? { ...entry, endTime: now, duration: now - entry.startTime }
+          : entry,
+      ),
+    );
+  }
+
+  function deleteEntry(entryId) {
+    setTimeEntries((prev) => prev.filter((entry) => entry.id !== entryId));
+  }
   return (
     <>
       <div className={`now-tracking ${!runningEntry ? "idle" : ""}`}>
