@@ -55,14 +55,19 @@ function App() {
     const now = Date.now();
 
     setTimeEntries((prev) => {
-      // close out any currently running entry
+      const currentlyRunning = prev.find((entry) => entry.endTime === null);
+
+      // already tracking this exact activity — do nothing
+      if (currentlyRunning && currentlyRunning.activityId === activityId) {
+        return prev;
+      }
+
       const closed = prev.map((entry) =>
         entry.endTime === null
           ? { ...entry, endTime: now, duration: now - entry.startTime }
           : entry,
       );
 
-      // add the new running entry
       return [
         ...closed,
         { id: now, activityId, startTime: now, endTime: null, duration: null },
