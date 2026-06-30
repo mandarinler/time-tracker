@@ -1,5 +1,5 @@
 import { formatDuration } from "../utils/formatDuration";
-
+import "./TrackerPage.css";
 function TrackerPage({ activities, timeEntries, runningEntry, startActivity, stopCurrent, deleteEntry }) {
   return (
     <>

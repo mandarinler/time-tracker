@@ -48,7 +48,7 @@ function App() {
       const closed = prev.map((entry) =>
         entry.endTime === null
           ? { ...entry, endTime: now, duration: now - entry.startTime }
-          : entry
+          : entry,
       );
       return [
         ...closed,
@@ -63,8 +63,8 @@ function App() {
       prev.map((entry) =>
         entry.endTime === null
           ? { ...entry, endTime: now, duration: now - entry.startTime }
-          : entry
-      )
+          : entry,
+      ),
     );
   }
 
@@ -79,8 +79,8 @@ function App() {
   function updateActivity(id, updates) {
     setActivities((prev) =>
       prev.map((activity) =>
-        activity.id === id ? { ...activity, ...updates } : activity
-      )
+        activity.id === id ? { ...activity, ...updates } : activity,
+      ),
     );
   }
 

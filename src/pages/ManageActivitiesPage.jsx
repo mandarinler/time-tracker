@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import "./ManageActivitiesPage.css";
 function ManageActivitiesPage({ activities, addActivity, updateActivity, deleteActivity }) {
   const [newName, setNewName] = useState("");
   const [newColor, setNewColor] = useState("#4f9cff");
