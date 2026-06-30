@@ -4,28 +4,50 @@ import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 dayjs.extend(duration);
 
-
-
 function App() {
-  const [activities, setActivities] = useState([
-    { id: 1, name: "Coding", color: "#4f9cff" },
-    { id: 2, name: "Watching YouTube", color: "#ff4f4f" },
-  ]);
-  const [, forceTick] = useState(0);
-  const [timeEntries, setTimeEntries] = useState([]);
-  const runningEntry = timeEntries.find((e) => e.endTime === null);
-  
-  function formatDuration(ms) {
-  const d = dayjs.duration(ms);
-  const hours = Math.floor(d.asHours());
-  const minutes = d.minutes();
-  const seconds = d.seconds();
+  const [activities, setActivities] = useState(() => {
+    const saved = localStorage.getItem("activities");
+    return saved
+      ? JSON.parse(saved)
+      : [
+          { id: 1, name: "Coding", color: "#4f9cff" },
+          { id: 2, name: "Watching YouTube", color: "#ff4f4f" },
+        ];
+  });
 
-  if (hours > 0) {
-    return `${hours}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+  const [timeEntries, setTimeEntries] = useState(() => {
+    const saved = localStorage.getItem("timeEntries");
+    return saved ? JSON.parse(saved) : [];
+  });
+  const [, forceTick] = useState(0);
+
+  const runningEntry = timeEntries.find((e) => e.endTime === null);
+  useEffect(() => {
+    localStorage.setItem("activities", JSON.stringify(activities));
+  }, [activities]);
+
+  useEffect(() => {
+    localStorage.setItem("timeEntries", JSON.stringify(timeEntries));
+  }, [timeEntries]);
+  useEffect(() => {
+    const isRunning = timeEntries.some((e) => e.endTime === null);
+    if (!isRunning) return;
+
+    const interval = setInterval(() => forceTick((t) => t + 1), 1000);
+    return () => clearInterval(interval);
+  }, [timeEntries]);
+
+  function formatDuration(ms) {
+    const d = dayjs.duration(ms);
+    const hours = Math.floor(d.asHours());
+    const minutes = d.minutes();
+    const seconds = d.seconds();
+
+    if (hours > 0) {
+      return `${hours}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+    }
+    return `${minutes}:${String(seconds).padStart(2, "0")}`;
   }
-  return `${minutes}:${String(seconds).padStart(2, "0")}`;
-}
   function startActivity(activityId) {
     const now = Date.now();
 
@@ -55,14 +77,6 @@ function App() {
       ),
     );
   }
-
-  useEffect(() => {
-    const isRunning = timeEntries.some((e) => e.endTime === null);
-    if (!isRunning) return;
-
-    const interval = setInterval(() => forceTick((t) => t + 1), 1000);
-    return () => clearInterval(interval);
-  }, [timeEntries]);
 
   return (
     <div className="app">
