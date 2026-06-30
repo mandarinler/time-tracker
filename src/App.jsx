@@ -37,6 +37,9 @@ function App() {
     return () => clearInterval(interval);
   }, [timeEntries]);
 
+  function deleteEntry(entryId) {
+    setTimeEntries((prev) => prev.filter((entry) => entry.id !== entryId));
+  }
   function formatDuration(ms) {
     const d = dayjs.duration(ms);
     const hours = Math.floor(d.asHours());
@@ -145,9 +148,18 @@ function App() {
                     />
                     {activity.name}
                   </div>
-                  <span className="history-item-duration">
-                    {formatDuration(entry.duration)}
-                  </span>
+                  <div className="history-item-right">
+                    <span className="history-item-duration">
+                      {formatDuration(entry.duration)}
+                    </span>
+                    <button
+                      className="delete-button"
+                      onClick={() => deleteEntry(entry.id)}
+                      aria-label={`Delete ${activity.name} entry`}
+                    >
+                      ×
+                    </button>
+                  </div>
                 </li>
               );
             })}

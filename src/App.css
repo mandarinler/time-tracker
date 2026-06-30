@@ -236,7 +236,27 @@ body {
   padding: 20px 0;
   text-align: center;
 }
+.history-item-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.delete-button {
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 6px;
+  transition: color 0.15s ease, background 0.15s ease;
+}
 
+.delete-button:hover {
+  color: var(--color-danger);
+  background: rgba(255, 92, 92, 0.1);
+}
 /* --- Responsive: phone --- */
 
 @media (max-width: 420px) {
