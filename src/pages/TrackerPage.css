@@ -256,7 +256,7 @@
   color: var(--color-text-muted);
 }
 
-.goal-input {
+/* .goal-input {
   width: 110px;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
@@ -265,7 +265,7 @@
   color: var(--color-text);
   font-family: var(--font-display);
   font-size: 13px;
-}
+} */
 
 .goal-tag {
   font-family: var(--font-mono);

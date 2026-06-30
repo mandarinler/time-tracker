@@ -1,13 +1,11 @@
-
-
 .activity-form {
   display: flex;
   gap: 8px;
   margin-bottom: 24px;
 }
 
-.activity-form input[type="text"] {
-  flex: 1;
+.activity-input{
+  flex: 3;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: 8px;
@@ -17,8 +15,8 @@
   font-size: 14px;
 }
 
-.activity-form input[type="color"] {
-  width: 44px;
+.color-input{
+  width: 40px;
   height: 40px;
   border: 1px solid var(--color-border);
   border-radius: 8px;
@@ -100,8 +98,18 @@
   padding: 2px;
   cursor: pointer;
 }
+.goal-input {
+  width: 150px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-size: 13px;
+}
 
-.manage-item-editing .goal-input {
+.manage-item-editing .goal-input{
   width: 100px;
   background: var(--color-bg);
   border: 1px solid var(--color-border);

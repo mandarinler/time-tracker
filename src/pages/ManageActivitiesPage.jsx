@@ -66,8 +66,9 @@ function ManageActivitiesPage({ activities, setActivities }) {
           placeholder="Activity name"
           value={newName}
           onChange={(e) => setNewName(e.target.value)}
+          className="activity-input"
         />
-        <input type="color" value={newColor} onChange={(e) => setNewColor(e.target.value)} />
+        <input type="color" className="color-input" value={newColor} onChange={(e) => setNewColor(e.target.value)} />
         <input
           type="number"
           placeholder="Daily goal (min)"
